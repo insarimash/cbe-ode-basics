@@ -12,11 +12,11 @@ Ea2b = 100000
 Ea1c = 30000
 Ea2c = 50000
 
-k1b = A*np.exp(-Ea1b/(R*T))
-k2b = A*np.exp(-Ea2b/(R*T))
+# k1b = A*np.exp(-Ea1b/(R*T))
+# k2b = A*np.exp(-Ea2b/(R*T))
 
-k1c = A*np.exp(-Ea1c/(R*T))
-k2c = A*np.exp(-Ea2c/(R*T))
+# k1c = A*np.exp(-Ea1c/(R*T))
+# k2c = A*np.exp(-Ea2c/(R*T))
 
 
 conc0 = np.array([1, 0, 0])
@@ -32,20 +32,55 @@ def dfdt(t, conc):
     dCdt = r1c - r2c
     return [dAdt, dBdt, dCdt]
 
-conc = solve_ivp(fun = dfdt, 
+# conc = solve_ivp(fun = dfdt, 
+#                  t_span=(0, 100), 
+#                  y0 = conc0,
+#                  )
+
+
+# plt.plot(conc.t, conc.y[0], label='A(t)', color='blue')
+# plt.plot(conc.t, conc.y[1], label='B(t)', color='red')
+# plt.plot(conc.t, conc.y[2], label='C(t)', color='green')
+
+# plt.xlabel('Time (t)')
+# plt.ylabel('Values')
+# plt.title('kinetic-thermodynamic control simulation')
+# plt.legend() # This shows the labels we defined in plt.plot
+# plt.grid(True)
+# plt.show()
+
+
+
+
+
+
+conc = np.zeros((900, 3))
+T0 = 100
+
+
+for i in range(900):
+    T = T0 + i
+    k1b = A*np.exp(-Ea1b/(R*T))
+    k2b = A*np.exp(-Ea2b/(R*T))
+
+    k1c = A*np.exp(-Ea1c/(R*T))
+    k2c = A*np.exp(-Ea2c/(R*T))
+    solution = solve_ivp(fun = dfdt, 
                  t_span=(0, 100), 
                  y0 = conc0,
                  )
+    conc[i] = [ solution.y[0][-1], solution.y[1][-1], solution.y[2][-1] ]
 
 
-plt.plot(conc.t, conc.y[0], label='A(t)', color='blue')
-plt.plot(conc.t, conc.y[1], label='B(t)', color='red')
-plt.plot(conc.t, conc.y[2], label='C(t)', color='green')
+T_array = np.arange(100, 1000)
 
-plt.xlabel('Time (t)')
+plt.plot(T_array, conc[:, 0], label='A(t)', color='blue')
+plt.plot(T_array, conc[:, 1], label='B(t)', color='red')
+plt.plot(T_array, conc[:, 2], label='C(t)', color='green')
+
+plt.xlabel('Temperature')
 plt.ylabel('Values')
-plt.title('kinetic-thermodynamic control simulation')
+plt.title('Final concentrations/Temperature dependancy')
 plt.legend() # This shows the labels we defined in plt.plot
 plt.grid(True)
 plt.show()
-    

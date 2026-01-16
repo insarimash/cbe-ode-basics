@@ -31,7 +31,7 @@ plt.plot(conc.t, conc.y[2], label='C(t)', color='green')
 plt.xlabel('Time (t)')
 plt.ylabel('Values')
 plt.title('A+B = C reaction somulation')
-plt.legend() # This shows the labels we defined in plt.plot
+plt.legend() 
 plt.grid(True)
 plt.show()
     
