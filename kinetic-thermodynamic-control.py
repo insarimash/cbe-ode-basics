@@ -5,6 +5,10 @@ from scipy.integrate import solve_ivp
 R = 8.314
 T = 300
 A = 1000
+T_onset = -1.0
+A0 = 1
+B0 = 0
+C0 = 0
 
 Ea1b = 60000
 Ea2b = 100000
@@ -19,7 +23,7 @@ Ea2c = 50000
 # k2c = A*np.exp(-Ea2c/(R*T))
 
 
-conc0 = np.array([1, 0, 0])
+conc0 = np.array([A0, B0, C0])
 
 def dfdt(t, conc):
     A, B, C = conc
@@ -70,8 +74,10 @@ for i in range(900):
                  y0 = conc0,
                  )
     conc[i] = [ solution.y[0][-1], solution.y[1][-1], solution.y[2][-1] ]
+    if(T_onset == -1 and float(solution.y[0][-1])/A0 <= 0.99):
+        T_onset = T
 
-
+print("T_onset = " + str(T_onset))
 T_array = np.arange(100, 1000)
 
 plt.plot(T_array, conc[:, 0], label='A(t)', color='blue')
